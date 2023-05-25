@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
+// import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const Home = () => {
     const [username, setUsername] = useState('');
     const createNewRoom = (e) => {
         e.preventDefault();
-        const id = uuidV4();
+        const id = 1; // uuidV4();
         setRoomId(id);
         toast.success('Created a new room');
     };
