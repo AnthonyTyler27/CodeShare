@@ -1,9 +1,9 @@
 # About Project
 
-CodeVilla is a Collaborative Code Editor. It is a Full Stack Web Application.
-This project is developed with the help of web socket and Code Mirror.
-Web Socket offers Full Duplex Communication. Code Mirror is used to give proper color-format to 
-code editor.
+This project was built off of CodeVilla which is a Collaborative Code Editor. 
+It's goal is to allow for classroom coding sessions where students can view on
+their own browsers CS code. 
+
 
 Two Pages are there :
 1. Login Page

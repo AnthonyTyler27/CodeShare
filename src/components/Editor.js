@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import Codemirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
-import 'codemirror/mode/javascript/javascript';
+import 'codemirror/theme/neat.css';
+// import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
@@ -14,8 +16,9 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             editorRef.current = Codemirror.fromTextArea(
                 document.getElementById('realtimeEditor'),
                 {
-                    mode: { name: 'javascript', json: true },
-                    theme: 'monokai',
+   //                 mode: { name: 'javascript', json: true },
+                    mode: { name: 'text/x-java'},
+                    theme: 'neat',
                     autoCloseTags: true,
                     autoCloseBrackets: true,
                     lineNumbers: true,
