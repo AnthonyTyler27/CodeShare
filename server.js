@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const path = require('path');
+
+const fs = require('fs');
+
 const { Server } = require('socket.io');
 const ACTIONS = require('./src/Actions');
 
@@ -65,3 +68,13 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+
+
+/*
+fs.writeFile("a.txt","Hi!", (err) => {
+    if(err) {
+        throw err;
+    }
+    console.log("Wrote file!");
+});*/
