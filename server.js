@@ -4,6 +4,7 @@ const http = require('http');
 const path = require('path');
 
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const { Server } = require('socket.io');
 const ACTIONS = require('./src/Actions');
@@ -12,8 +13,21 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.static('build'));
+/*
 app.use((req, res, next) => {
+
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});*/
+
+app.get('/', (req,res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.use(bodyParser.json());
+
+app.post('/', (req,res) => {
+    console.log("Hey there poster!" + req.body.text);
+    res.end();
 });
 
 const userSocketMap = {};
@@ -67,6 +81,9 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
+
+console.log("up to date!");
+
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 
