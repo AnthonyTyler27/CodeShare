@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
 import Codemirror from 'codemirror';
+
+
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/theme/neat.css';
@@ -10,6 +12,8 @@ import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
 
+var delay;
+
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
     const editorRef = useRef(null);
     useEffect(() => {
@@ -17,7 +21,6 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             editorRef.current = Codemirror.fromTextArea(
                 document.getElementById('realtimeEditor'),
                 {
-   //                 mode: { name: 'javascript', json: true },
                     mode: { name: 'text/x-java'},
                     theme: 'neat',
                     autoCloseTags: true,
@@ -27,15 +30,12 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             );
 
             editorRef.current.on('change', (instance, changes) => {
-                console.log("Typed somsething");
-                fetch('/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({text: instance.getValue()})
-                });
                 
+                // This will update the server copy of the code 1 second after
+                // the user stops typing.  Might be able to increase this. 
+                clearTimeout(delay);
+                delay = setTimeout(updateCodeOnServer,1000,instance.getValue());
+               
                 const { origin } = changes;
                 const code = instance.getValue();
                 onCodeChange(code);
@@ -69,5 +69,17 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
     return <textarea id="realtimeEditor"></textarea>;
 };
+
+function updateCodeOnServer(data) {
+    console.log("Sending code to server.");
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },                 
+        // convert code area text to JSON and encode in base64.
+        body: JSON.stringify({text: btoa(data)})
+    });
+}
 
 export default Editor;

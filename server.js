@@ -26,7 +26,7 @@ app.get('/', (req,res) => {
 app.use(bodyParser.json());
 
 app.post('/', (req,res) => {
-    console.log("Hey there poster!" + req.body.text);
+    console.log("Hey there poster!" + atob(req.body.text));
     res.end();
 });
 

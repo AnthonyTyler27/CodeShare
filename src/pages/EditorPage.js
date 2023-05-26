@@ -1,5 +1,4 @@
 // Editor Page
-
 import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
@@ -12,6 +11,7 @@ import {
     Navigate,
     useParams,
 } from 'react-router-dom';
+
 
 const EditorPage = () => {
     const socketRef = useRef(null);
