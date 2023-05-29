@@ -19,15 +19,28 @@ app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });*/
 
-app.get('/', (req,res) => {
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use(bodyParser.json());
 
-app.post('/', (req,res) => {
-    console.log("Hey there poster!" + atob(req.body.text));
+app.post('/send', (req, res) => {
+    //console.log("Hey there poster!" + atob(req.body.text));
+    fs.writeFile("a.txt", Buffer.from(req.body.text,'base64'),  (err) => {
+        if (err) {
+            throw err;
+        }
+        console.log("Wrote file!");
+    });
     res.end();
+});
+
+app.post('/getfile', (req, res) => {
+    someText = fs.readFile("a.txt",{encoding:'utf8'}, function(err,data) {
+        res.send(JSON.stringify({text: data}));
+    });
+    
 });
 
 const userSocketMap = {};
@@ -82,16 +95,10 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 
-console.log("up to date!");
+
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 
 
-/*
-fs.writeFile("a.txt","Hi!", (err) => {
-    if(err) {
-        throw err;
-    }
-    console.log("Wrote file!");
-});*/
+

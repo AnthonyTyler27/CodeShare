@@ -67,6 +67,9 @@ const EditorPage = () => {
                 }
             );
         };
+
+  
+
         init();
         return () => {
             socketRef.current.disconnect();
@@ -119,6 +122,7 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
+                <button> Hey there</button>
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}

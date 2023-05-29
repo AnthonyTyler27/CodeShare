@@ -1,1 +1,6 @@
-Hi!
+public class HelloWorld {jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+  public static void main(String[] args) {
+    System.out.println("Hello there");
+  }
+  // Look what I  can do?
+} 

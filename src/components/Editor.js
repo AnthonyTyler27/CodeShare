@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import Codemirror from 'codemirror';
-
+import toast from 'react-hot-toast';
 
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
@@ -11,6 +11,7 @@ import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
+import codemirror from 'codemirror';
 
 var delay;
 
@@ -21,33 +22,38 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             editorRef.current = Codemirror.fromTextArea(
                 document.getElementById('realtimeEditor'),
                 {
-                    mode: { name: 'text/x-java'},
+                    mode: { name: 'text/x-java' },
                     theme: 'neat',
                     autoCloseTags: true,
                     autoCloseBrackets: true,
                     lineNumbers: true,
+                    readOnly: true
                 }
             );
+                
+
+            // Now, we get the file from the server. 
+            getFileFromServer(editorRef);
 
             editorRef.current.on('change', (instance, changes) => {
-                
+
                 // This will update the server copy of the code 1 second after
                 // the user stops typing.  Might be able to increase this. 
                 clearTimeout(delay);
-                delay = setTimeout(updateCodeOnServer,1000,instance.getValue());
-               
+                delay = setTimeout(updateCodeOnServer, 1000, instance.getValue());
+
                 const { origin } = changes;
                 const code = instance.getValue();
                 onCodeChange(code);
                 if (origin !== 'setValue') {
-                   socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+                    socketRef.current.emit(ACTIONS.CODE_CHANGE, {
                         roomId,
                         code,
                     });
-                    
+
                 }
-                
-                
+
+
             });
         }
         init();
@@ -70,15 +76,39 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     return <textarea id="realtimeEditor"></textarea>;
 };
 
+/*
+This function asks for the current file from the server. 
+*/
+async function getFileFromServer(editorRef) {
+    const file = await fetch('/getfile', { method: 'POST' });
+    await fetch('/getfile', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            // do something with the retrieved data 
+            editorRef.current.setValue(data.text);
+
+            // now, the user can edit this
+            
+            editorRef.current.setOption('readOnly',false);
+            
+
+        }).catch(error => {
+            console.error("Server error! Attempt to get the file failed.");
+            toast.error("Temporary Server Error");
+        });
+}
+
+
+
 function updateCodeOnServer(data) {
     console.log("Sending code to server.");
-    fetch('/', {
+    fetch('/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },                 
+        },
         // convert code area text to JSON and encode in base64.
-        body: JSON.stringify({text: btoa(data)})
+        body: JSON.stringify({ text: btoa(data) })
     });
 }
 
