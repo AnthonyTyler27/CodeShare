@@ -1,6 +1,8 @@
-public class HelloWorld {jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+public class HelloWorld {
   public static void main(String[] args) {
     System.out.println("Hello there");
   }
-  // Look what I  can do?
-} 
+  public static int callMe() {
+    return(3+2);
+  }
+}

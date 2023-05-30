@@ -11,7 +11,6 @@ import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
-import codemirror from 'codemirror';
 
 var delay;
 
@@ -27,6 +26,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                     autoCloseTags: true,
                     autoCloseBrackets: true,
                     lineNumbers: true,
+                    lineWrapping: true,
                     readOnly: true
                 }
             );
