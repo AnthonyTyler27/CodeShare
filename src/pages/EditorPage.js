@@ -4,11 +4,9 @@ import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import XTermTerminal from '../components/Terminal'
 
-// components needed for the terminal
-import 'xterm/css/xterm.css'
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
+
 
 
 import { initSocket } from '../socket';
@@ -23,8 +21,7 @@ import {
 const EditorPage = () => {
     const socketRef = useRef(null);
     const codeRef = useRef(null);
-    const terminalRef = useRef(null);
-    const fitAddonRef = useRef(null);
+
     const location = useLocation();
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
@@ -77,27 +74,16 @@ const EditorPage = () => {
             );
         };
 
-        const fitAddon = new FitAddon();
-        const terminal = new Terminal();
-        terminal.loadAddon(fitAddon);
-        terminal.open(terminalRef.current);
-        fitAddon.fit();
-        fitAddonRef.current = fitAddon;
-
-        // Example: Display initial message
-        terminal.writeln('Welcome to the interactive terminal!');
-        terminal.writeln('Type anything and press Enter to see it echoed.');
-        for (var i = 1; i < 10; i++) {
-            terminal.writeln("a" + i);
-        }
+        
 
 
         init();
+
         return () => {
             socketRef.current.disconnect();
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
-            terminal.dispose();
+
         };
     }, []);
 
@@ -130,7 +116,9 @@ const EditorPage = () => {
                         codeRef.current = code;
                     }}
                 />
-                <div className="console" ref={terminalRef}></div>
+                <XTermTerminal
+                    socketRef={socketRef}/>
+
             </div>
         </div>
     );

@@ -143,20 +143,18 @@
     font-size: 20px;
     line-height: 1.6;
     padding-top: 0px; 
-    height: 80vh;
     /* was 20px*/
 }
 
 .editorWrap {
+    display: grid;
+    grid-template-rows: 80% 20%;
     height: 100vh;
 }
 
-.codeSection {
-    height: 80vh;
-}
-
-.console {
-    height: 20vh;
+.terminal {
+    background-color: black;
+    height: 100%;
 }
 
 

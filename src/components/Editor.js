@@ -30,7 +30,8 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                     readOnly: true
                 }
             );
-                
+            
+            editorRef.current.setSize("100%","100%");
 
             // Now, we get the file from the server. 
             getFileFromServer(editorRef);
