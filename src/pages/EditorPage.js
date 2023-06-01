@@ -117,6 +117,7 @@ const EditorPage = () => {
                     }}
                 />
                 <XTermTerminal
+                    roomId={roomId}
                     socketRef={socketRef}/>
 
             </div>

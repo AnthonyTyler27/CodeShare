@@ -5,7 +5,9 @@ const ACTIONS = {
     CODE_CHANGE: 'code-change',
     SYNC_CODE: 'sync-code',
     LEAVE: 'leave',
-    EXECUTE: 'execute'
+    COMMAND: 'command',
+    INPUT: 'input',
+    OUTPUT: 'output'
 };
 
 module.exports = ACTIONS;
