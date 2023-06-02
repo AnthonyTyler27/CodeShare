@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ACTIONS from '../Actions';
+import POSTS from '../Posts';
 
 
 // components needed for the terminal
@@ -23,17 +24,12 @@ const XTermTerminal = ({ roomId, socketRef }) => {
 
             fitAddon.fit();
 
+            createDockerContainerOnServer(roomId);
+
             
-
-            terminal.onKey((e) => {
-                console.log(e.key);
-                if(e.domEvent.key==="Enter"){
-                    socketRef.current.emit(ACTIONS.COMMAND,'');
-                }
-                socketRef.current.emit(ACTIONS.INPUT, e.key);
+            terminal.onData((data) =>  {
+                socketRef.current.emit(ACTIONS.INPUT, data);
             });
-
-
 
             return () => {
                 terminal.dispose();
@@ -60,6 +56,16 @@ const XTermTerminal = ({ roomId, socketRef }) => {
 
 
     return <div class="terminal" ref={terminalRef}></div>
+}
+
+async function createDockerContainerOnServer(roomId) {
+   await fetch(POSTS.STARTDOCKER, { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({roomId: btoa(roomId)})
+        });
 }
 
 export default XTermTerminal;
