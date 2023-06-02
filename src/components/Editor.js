@@ -11,6 +11,7 @@ import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
+import POSTS from '../Posts';
 
 var delay;
 
@@ -81,8 +82,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 This function asks for the current file from the server. 
 */
 async function getFileFromServer(editorRef) {
-    const file = await fetch('/getfile', { method: 'POST' });
-    await fetch('/getfile', { method: 'POST' })
+    await fetch(POSTS.GETSOURCEFILE, { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             // do something with the retrieved data 
@@ -103,7 +103,7 @@ async function getFileFromServer(editorRef) {
 
 function updateCodeOnServer(data) {
     console.log("Sending code to server.");
-    fetch('/send', {
+    fetch(POSTS.SENDSOURCEFILE, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
