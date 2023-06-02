@@ -10,8 +10,8 @@ import 'codemirror/theme/neat.css';
 import 'codemirror/mode/clike/clike';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
-import ACTIONS from '../Actions';
-import POSTS from '../Posts';
+import ACTIONS from '../server/Actions';
+import POSTS from '../server/Posts';
 
 var delay;
 

@@ -3,21 +3,20 @@ const app = express();
 const http = require('http');
 const path = require('path');
 
-const pty = require('node-pty');       // using this for the terminal
-
-
-
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-const { Server } = require('socket.io');
-const ACTIONS = require('./src/Actions');
-const POSTS = require('./src/Posts');
 
-const { startDockerContainer, findContainer } = require('./src/DockerComms');
+const { Server } = require('socket.io');
+const ACTIONS = require('./src/server/Actions');
+const POSTS = require('./src/server/Posts');
+
+const { startDockerContainer, findContainer } = require('./src/server/DockerComms');
 
 const server = http.createServer(app);
 const io = new Server(server);
+
+const allTerminals = {};
 
 
 app.use(express.static('build'));
@@ -42,10 +41,21 @@ app.post(POSTS.SENDSOURCEFILE, (req, res) => {
 
 app.post(POSTS.STARTDOCKER, (req, res) => {
 
-  const roomName = Buffer.from(req.body.roomId,'base64').toString();
+  const roomName = Buffer.from(req.body.roomId, 'base64').toString();
   findContainer(roomName).then(found => {
-    if(!found) {
-      startDockerContainer(roomName);
+    if (!found) {
+      startDockerContainer(roomName).then((shell) => {
+        // this part sets it up so all connected sockets in this room
+        // will get the shell terminal's data.
+        shell.onData((data) => {
+          const clients = getAllConnectedClients(roomName);
+          clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.OUTPUT, data.toString());
+          });
+        });
+        allTerminals[roomName] = shell;   // save a reference to this shell
+      });
+      
     } else {
       console.log("Container is found, so not starting again.");
     }
@@ -79,19 +89,8 @@ function getAllConnectedClients(roomId) {
 io.on('connection', (socket) => {
   console.log('socket connected', socket.id);
 
-  const shell = pty.spawn('docker', ['exec', '-it', '32e6a70d9d2ea62cde022bdcd6ff13f6c718d7212a62d313e5502a6bbf1ceec1', 'bash'], {
-    name: 'xterm-color',
-    cols: 80,
-    rows: 30,
-    cwd: process.env.HOME,
-    env: process.env,
-  });
-
-  shell.onData((data) => {
-    socket.emit(ACTIONS.OUTPUT, data.toString());
-  });
-
-  socket.on(ACTIONS.INPUT, (data) => {
+  socket.on(ACTIONS.INPUT, ({roomId, data}) => {
+    const shell = allTerminals[roomId];
     shell.write(data);
   });
 
@@ -137,7 +136,5 @@ const PORT = process.env.PORT || 5000;
 
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-
-
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import ACTIONS from '../Actions';
-import POSTS from '../Posts';
+import ACTIONS from '../server/Actions';
+import POSTS from '../server/Posts';
 
 
 // components needed for the terminal
@@ -28,7 +28,7 @@ const XTermTerminal = ({ roomId, socketRef }) => {
 
             
             terminal.onData((data) =>  {
-                socketRef.current.emit(ACTIONS.INPUT, data);
+                socketRef.current.emit(ACTIONS.INPUT, {roomId, data});
             });
 
             return () => {
