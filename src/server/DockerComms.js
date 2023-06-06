@@ -2,6 +2,28 @@ const Docker = require('dockerode');
 const pty = require('node-pty');
 
 const docker = new Docker();
+/* stops and deletes all running Docker containers
+*/
+
+async function stopAndDeleteAllContainers() {
+  try {
+    // Fetch list of all containers
+    const containers = await docker.listContainers({ all: true });
+
+    // Stop and remove each container
+    await Promise.all(
+      containers.map(async (container) => {
+        const containerInstance = docker.getContainer(container.Id);
+        await containerInstance.stop();
+        await containerInstance.remove({ force: true });
+      })
+    );
+
+    console.log('All containers stopped and removed successfully.');
+  } catch (error) {
+    console.error('Error occurred:', error);
+  }
+}
 
 /*
 starts up docker container 
@@ -63,4 +85,4 @@ function findContainer(id) {
     });
   });
 }
-module.exports = { startDockerContainer, findContainer };
+module.exports = { startDockerContainer, findContainer, stopAndDeleteAllContainers};

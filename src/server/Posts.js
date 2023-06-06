@@ -1,7 +1,8 @@
 const POSTS = {
     SENDSOURCEFILE: '/sendfile',
     GETSOURCEFILE: '/getfile',
-    STARTDOCKER: '/startdocker'
+    STARTDOCKER: '/startdocker',
+    GETDIRECTORYSTRUCTURE: '/getdirectorystructure'
 };
 
 module.exports = POSTS;

@@ -1,12 +1,13 @@
+
 // Editor Page
 import React, { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import ACTIONS from '../server/Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import FileSystemNavigator from '../components/FileBrowser'
 import XTermTerminal from '../components/Terminal'
-
-
+import { Tabs, Tab, Box } from '@mui/material';
 
 
 import { initSocket } from '../socket';
@@ -18,6 +19,7 @@ import {
 } from 'react-router-dom';
 
 
+
 const EditorPage = () => {
     const socketRef = useRef(null);
     const codeRef = useRef(null);
@@ -26,6 +28,14 @@ const EditorPage = () => {
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
+
+
+
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     useEffect(() => {
         const init = async () => {
@@ -74,7 +84,7 @@ const EditorPage = () => {
             );
         };
 
-        
+
 
 
         init();
@@ -107,20 +117,40 @@ const EditorPage = () => {
 
     return (
         <div className="mainWrap">
-           
+
             <div className="editorWrap">
-                <Editor 
-                    socketRef={socketRef}
-                    roomId={roomId}
-                    onCodeChange={(code) => {
-                        codeRef.current = code;
-                    }}
-                />
+                <div>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChange}>
+                            <Tab label="Tab 1" />
+                            <Tab label="Tab 2" />
+                            <Tab label="Tab 3" />
+                        </Tabs>
+                        {value === 0 && <div>
+                            <Editor
+                                socketRef={socketRef}
+                                roomId={roomId}
+                                onCodeChange={(code) => {
+                                    codeRef.current = code;
+                                }}
+                            /></div>}
+                        {value === 1 && <div>Content for Tab 2</div>}
+                        {value === 2 && <div>Content for Tab 3</div>}
+                    </Box>
+                </div>
+
+
                 <XTermTerminal
                     roomId={roomId}
-                    socketRef={socketRef}/>
+                    socketRef={socketRef} />
 
             </div>
+            <div className="aside">
+                <div className="asideInner">
+                    <FileSystemNavigator/>
+                </div>
+            </div>
+
         </div>
     );
 };

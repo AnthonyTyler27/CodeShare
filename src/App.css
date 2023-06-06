@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap');
 
+
 .homePageWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;  
+    color: #fff;
     height: 100vh;
 }
 
@@ -29,7 +30,7 @@
 .homePageLogo {
     font-size: 50px;
     text-align: center;
-    background: -webkit-linear-gradient(aqua,rgb(47, 189, 189));
+    background: -webkit-linear-gradient(aqua, rgb(47, 189, 189));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-family: 'Dancing Script', cursive;
@@ -67,7 +68,8 @@
 
 .joinBtn:hover,
 .leaveBtn:hover {
-    background: rgb(15, 174, 174);;
+    background: rgb(15, 174, 174);
+    ;
 }
 
 .createInfo {
@@ -82,24 +84,26 @@
     transition: all 0.3s ease-in-out;
 }
 
-.createNewBtn:hover{
+.createNewBtn:hover {
     color: rgb(15, 174, 174);
     border-color: rgb(15, 174, 174);
 }
 
 .mainWrap {
     display: grid;
+    background-color:#ffffff;
     grid-template-columns: 1fr 1fr;
     height: 100vh;
 }
 
 .aside {
-    background : linear-gradient(135deg, #333233, #080408);
+   /*background: linear-gradient(135deg, #333233, #080408);
     padding: 16px;
-    color: #fff;
+    color: #fff;*/
     display: flex;
     flex-direction: column;
 }
+
 .asideInner {
     flex: 1;
 }
@@ -117,12 +121,13 @@
     flex-direction: column;
     font-weight: bold;
 }
+
 .userName {
     margin-top: 10px;
 }
 
 .logo {
-    background: -webkit-linear-gradient(aqua,rgb(47, 189, 189));
+    background: -webkit-linear-gradient(aqua, rgb(47, 189, 189));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 20px;
@@ -142,7 +147,7 @@
     /*min-height: calc(100vh - 20px);*/
     font-size: 20px;
     line-height: 1.6;
-    padding-top: 0px; 
+    padding-top: 0px;
     /* was 20px*/
 }
 
@@ -156,21 +161,6 @@
     background-color: black;
     height: 100%;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

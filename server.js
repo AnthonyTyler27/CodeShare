@@ -10,14 +10,16 @@ const bodyParser = require('body-parser');
 const { Server } = require('socket.io');
 const ACTIONS = require('./src/server/Actions');
 const POSTS = require('./src/server/Posts');
+const { getDirectoryStructure } = require('./src/server/DirectoryUtils');
 
-const { startDockerContainer, findContainer } = require('./src/server/DockerComms');
+const { startDockerContainer, findContainer, stopAndDeleteAllContainers } = require('./src/server/DockerComms');
 
 const server = http.createServer(app);
 const io = new Server(server);
 
 const allTerminals = {};
 
+stopAndDeleteAllContainers();
 
 app.use(express.static('build'));
 
@@ -63,7 +65,14 @@ app.post(POSTS.STARTDOCKER, (req, res) => {
   res.end();
 });
 
-
+// get directory structure for front-end
+app.post(POSTS.GETDIRECTORYSTRUCTURE, (req,res) => {
+ console.log("Directory request detected");
+ const directoryPath = "./sample";
+ const structure = JSON.stringify(getDirectoryStructure(directoryPath));
+ res.setHeader('Content-Type', 'application/json'); // Set the response content type to JSON
+ res.send(JSON.stringify(structure)); // Serialize the structure to JSON and send as the response
+});
 
 // loading file from server to user
 app.post(POSTS.GETSOURCEFILE, (req, res) => {
