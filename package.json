@@ -31,9 +31,9 @@
   },
   "scripts": {
     "start:front": "react-scripts start",
-    "start": "parcel src/App.js --no-source-maps",
+    "start": "npm run build && npm run server:prod",
     "dev": "npm run build && npm run server:dev",
-    "build": "parcel build index.html",
+    "build": "react-scripts build",
     "server:dev": "nodemon server.js",
     "server:prod": "node server.js",
     "test": "react-scripts test",
@@ -58,7 +58,6 @@
     ]
   },
   "devDependencies": {
-    "nodemon": "^2.0.15",
-    "parcel-bundler": "^1.12.5"
+    "nodemon": "^2.0.15"
   }
 }

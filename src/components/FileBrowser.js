@@ -76,13 +76,12 @@ export default function FileSystemNavigator() {
   };
   
   const renderTree = (nodes) => (
-    nodes==null ? (
+    (nodes!=null) ? (
     <TreeItem key={sanitizeId(nodes.id)} nodeId={sanitizeId(nodes.id)} label={nodes.name}>
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}
-    </TreeItem>) : 
-  );
+    </TreeItem>) : (null));
 
 
   return (
