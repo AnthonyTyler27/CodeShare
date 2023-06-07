@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import TreeView from '@mui/lab/TreeView';
 import { ButtonGroup, IconButton, Typography, Box } from '@mui/material';
-import { Folder, FolderOpen, Add, CreateNewFolder, Upload } from '@mui/icons-material';
+import { Folder, FolderOpen, Add, CreateNewFolder, Upload, DataArraySharp } from '@mui/icons-material';
 import POSTS from '../server/Posts'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import TreeItem from '@mui/lab/TreeItem';
-
-
 
 // Create a light theme specifically for the TreeView component
 const treeViewTheme = createTheme({
@@ -49,7 +47,7 @@ const styles = {
 };
 
 export default function FileSystemNavigator() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     getFileFromServer();
@@ -64,24 +62,32 @@ export default function FileSystemNavigator() {
       }});
       const xdata = await response.json();
       console.log("Received directory");
-      console.log(xdata);
-      setData(xdata);
+      setData(JSON.parse(xdata));
     } catch (error) {
       console.error(error);
     }
   };
 
   const sanitizeId = (id) => {
-    return id.replace(/[^\w]/g, '_'); // Replace invalid characters with underscores
+    return "a"+Math.random();//id.replace(/[^\w]/g, '_'); // Replace invalid characters with underscores
   };
   
-  const renderTree = (nodes) => (
-    (nodes!=null) ? (
-    <TreeItem key={sanitizeId(nodes.id)} nodeId={sanitizeId(nodes.id)} label={nodes.name}>
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node) => renderTree(node))
+  const renderTree = (nodes) => {
+    if(Array.isArray(nodes)) {
+      return nodes.map((node)=>renderTree(node));
+    }
+    if(nodes!=null) {
+      console.log(nodes);
+      return (<TreeItem key={sanitizeId(nodes.id)} nodeId={sanitizeId(nodes.id)} label={nodes.name} icon={
+      Array.isArray(nodes.children) ? (nodes.children.length ==0 ? <Folder/> : null) : null}>
+      {Array.isArray(nodes.children) && nodes.children.length > 0
+        ? renderTree(nodes.children)
         : null}
-    </TreeItem>) : (null));
+    </TreeItem>)
+    } else {
+      return null;
+    }
+  };
 
 
   return (
@@ -110,7 +116,7 @@ export default function FileSystemNavigator() {
           defaultExpandIcon={<Folder />}
           sx={{ height: '100%', width: 1, overflowY: 'auto', overflowX: 'hidden' }}
         >
-          {data!=null ? renderTree(data) : <div>No files available</div>}
+          {renderTree(data)}
         </TreeView>
       </Box>
     </ThemeProvider>
