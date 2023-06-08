@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import TreeView from '@mui/lab/TreeView';
-import { ButtonGroup, IconButton, Typography, Box } from '@mui/material';
-import { Folder, FolderOpen, Add, CreateNewFolder, Upload, DataArraySharp } from '@mui/icons-material';
+import { ButtonGroup, IconButton, Typography, Box, Tooltip } from '@mui/material';
+import { Folder, FolderOpen, Add, CreateNewFolder, Upload } from '@mui/icons-material';
 import POSTS from '../server/Posts'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import addFile from './AddFileDialog'
 
 import TreeItem from '@mui/lab/TreeItem';
 
@@ -59,7 +60,8 @@ export default function FileSystemNavigator() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-      }});
+        }
+      });
       const xdata = await response.json();
       console.log("Received directory");
       setData(JSON.parse(xdata));
@@ -69,26 +71,25 @@ export default function FileSystemNavigator() {
   };
 
   const sanitizeId = (id) => {
-    return "a"+Math.random();//id.replace(/[^\w]/g, '_'); // Replace invalid characters with underscores
+    return "a" + Math.random();//id.replace(/[^\w]/g, '_'); // Replace invalid characters with underscores
   };
-  
+
   const renderTree = (nodes) => {
-    if(Array.isArray(nodes)) {
-      return nodes.map((node)=>renderTree(node));
+    if (Array.isArray(nodes)) {
+      return nodes.map((node) => renderTree(node));
     }
-    if(nodes!=null) {
+    if (nodes != null) {
       console.log(nodes);
       return (<TreeItem key={sanitizeId(nodes.id)} nodeId={sanitizeId(nodes.id)} label={nodes.name} icon={
-      Array.isArray(nodes.children) ? (nodes.children.length ==0 ? <Folder/> : null) : null}>
-      {Array.isArray(nodes.children) && nodes.children.length > 0
-        ? renderTree(nodes.children)
-        : null}
-    </TreeItem>)
+        Array.isArray(nodes.children) ? (nodes.children.length == 0 ? <Folder /> : null) : null}>
+        {Array.isArray(nodes.children) && nodes.children.length > 0
+          ? renderTree(nodes.children)
+          : null}
+      </TreeItem>)
     } else {
       return null;
     }
   };
-
 
   return (
     <ThemeProvider theme={treeViewTheme}>
@@ -98,15 +99,21 @@ export default function FileSystemNavigator() {
             Files
           </Typography>
           <div>
-            <IconButton>
-              <Add />
-            </IconButton>
-            <IconButton>
-              <CreateNewFolder />
-            </IconButton>
-            <IconButton>
-              <Upload />
-            </IconButton>
+            <Tooltip title="Add new file">
+              <IconButton onClick={addFile}>
+                <Add />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Create new folder">
+              <IconButton>
+                <CreateNewFolder />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Upload file">
+              <IconButton>
+                <Upload />
+              </IconButton>
+            </Tooltip>
           </div>
         </ButtonGroup>
         <TreeView

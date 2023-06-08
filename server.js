@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const path = require('path');
+const session = require('express-session');
 
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -21,13 +22,25 @@ const allTerminals = {};
 
 stopAndDeleteAllContainers();
 
-app.use(express.static('build'));
+app.use(
+  express.static('build'),
+  bodyParser.json(),
+  session({
+    secret: 'appForCoding',
+    resave: false,
+    saveUninitialized: false
+  }));
+
 
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.use(bodyParser.json());
+// This is what is called when the user tries to create a file
+app.post(POSTS.REQUESTNEWFILE, (req, res) => {
+  res.status(400).json({error: 'Something went wrong with file creation'});
+});
+
 
 // This is what is called when the file is getting uploaded from user to server
 app.post(POSTS.SENDSOURCEFILE, (req, res) => {

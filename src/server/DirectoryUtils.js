@@ -30,6 +30,17 @@ function getDirectoryStructure(dir) {
     }
   });
 
+  // Sort the directoryStructure array (folders first, files last)
+  directoryStructure.sort((a, b) => {
+    if (a.children && !b.children) {
+      return -1; // a is a folder, b is a file
+    } else if (!a.children && b.children) {
+      return 1; // a is a file, b is a folder
+    } else {
+      return a.name.localeCompare(b.name); // sort alphabetically if both are folders or files
+    }
+  });
+
   return directoryStructure;
 }
 

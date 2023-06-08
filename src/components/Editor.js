@@ -73,7 +73,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
         return () => {
             socketRef.current.off(ACTIONS.CODE_CHANGE);
         };
-    }, [socketRef.current]);
+    }, [socketRef]);
 
     return <textarea id="realtimeEditor"></textarea>;
 };
@@ -82,21 +82,15 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 This function asks for the current file from the server. 
 */
 async function getFileFromServer(editorRef) {
-    await fetch(POSTS.GETSOURCEFILE, { method: 'POST' })
-        .then(response => response.json())
-        .then(data => {
-            // do something with the retrieved data 
-            editorRef.current.setValue(data.text);
-
-            // now, the user can edit this
-            
-            editorRef.current.setOption('readOnly',false);
-            
-
-        }).catch(error => {
-            console.error("Server error! Attempt to get the file failed.");
-            toast.error("Temporary Server Error");
-        });
+    try {
+        const response = await fetch(POSTS.GETSOURCEFILE, { method: 'POST' });
+        const data = await response.json();
+        editorRef.current.setValue(data.text);
+        editorRef.current.setOption('readOnly', false);
+      } catch (error) {
+        console.error("Server error! Attempt to get the file failed.");
+        toast.error("Temporary Server Error");
+      }
 }
 
 
